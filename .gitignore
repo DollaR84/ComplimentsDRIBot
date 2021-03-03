@@ -5,3 +5,4 @@
 *.db
 *.dat
 __pycache__/
+.env/
