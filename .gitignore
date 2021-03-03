@@ -6,3 +6,4 @@
 *.dat
 __pycache__/
 .env/
+debug/
