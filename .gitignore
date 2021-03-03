@@ -1,0 +1,7 @@
+*.log
+*.bat
+*.pyo
+*.pyc
+*.db
+*.dat
+__pycache__/
