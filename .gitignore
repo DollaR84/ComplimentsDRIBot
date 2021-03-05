@@ -3,7 +3,6 @@
 *.pyo
 *.pyc
 *.db
-*.dat
 __pycache__/
 .env/
 debug/
