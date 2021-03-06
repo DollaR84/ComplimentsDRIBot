@@ -20,11 +20,15 @@ from bs4 import BeautifulSoup
 class URL:
     BASE = 'https://smsta.ru/m/sms/'
     FUN = 'm_fun'
+    LOVE = 'm_love'
+    MISS = 'm_miss'
     EROTIC = 'm_erotic'
 
     def __call__(self):
         urls = [
             ''.join([URL.BASE, URL.FUN]),
+            ''.join([URL.BASE, URL.LOVE]),
+            ''.join([URL.BASE, URL.MISS]),
             ''.join([URL.BASE, URL.EROTIC]),
         ]
         return urls
