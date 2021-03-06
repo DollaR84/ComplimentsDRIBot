@@ -67,7 +67,7 @@ def load_language():
         Languages.current = data[list(Languages.supported.keys())[0]]
 
 
-def main():
+def run():
     load_language()
     if Compliments.data is None:
         result = []
@@ -79,4 +79,4 @@ def main():
 
 
 if '__main__' == __name__:
-    main()
+    run()
