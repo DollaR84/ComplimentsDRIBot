@@ -37,6 +37,16 @@ async def cmd_start(message: types.Message):
     await message.answer(local('phrases', 'start').format(name), reply_markup=menu_keyboard, parse_mode="HTML")
 
 
+@dp.message_handler(commands=['about'])
+async def cmd_about(message: types.Message):
+    await message.answer(local('about', 'author'), parse_mode="HTML")
+
+
+@dp.message_handler(commands=['count'])
+async def cmd_count(message: types.Message):
+    await message.answer(str(len(Compliments.data)), parse_mode="HTML")
+
+
 @dp.message_handler(content_types=types.ContentTypes.ANY)
 async def cmd_menu(message: types.Message):
     cmd = message.text
