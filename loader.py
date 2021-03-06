@@ -30,18 +30,6 @@ class URL:
         return urls
 
 
-class Headers:
-    def __call__(self):
-        headers = {
-            'User-Agent': 'Mozilla/5.0; Windows 8.1; rv:55.0; Firefox/55.0'
-        }
-        return headers
-
-
-__urls__ = URL()
-__headers__ = Headers()
-
-
 async def load(client, url):
     result = None
     async with client.get(url) as response:
@@ -53,10 +41,9 @@ async def load(client, url):
 async def get_pages(urls, pages):
     """Load pages from site."""
     async with aiohttp.ClientSession() as client:
-        coroutines = [load(client, url) for url in urls]
-        completed, pending = await asyncio.wait(coroutines)
-        for item in completed:
-            result = item.result()
+        tasks = [load(client, url) for url in urls]
+        results = await asyncio.gather(*tasks)
+        for result in results:
             pages.append(result)
     await asyncio.sleep(0.3)
 
@@ -77,18 +64,19 @@ def parse(page, ):
     return result
 
 
-def get_data():
+async def get_data():
     """Load, parse and return data from site."""
     data = []
     pages = []
-    asyncio.run(get_pages(__urls__(), pages))
+    urls = URL()
+    await get_pages(urls(), pages)
     with mp.Pool(processes=mp.cpu_count()) as pool:
         results = pool.map(parse, pages)
     data.extend([item for result in results for item in result['posts']])
     data.extend([item for result in results for item in result['entries']])
     pages.clear()
     urls = [''.join([URL.BASE, url]) for result in results for url in result['urls']]
-    asyncio.run(get_pages(urls, pages))
+    await get_pages(urls, pages)
     with mp.Pool(processes=mp.cpu_count()) as pool:
         results = pool.map(parse, pages)
     data.extend([item for result in results for item in result['posts']])
@@ -96,8 +84,15 @@ def get_data():
     return data
 
 
+async def worker(data):
+    result = await get_data()
+    for item in result:
+        data.append(item)
+
+
 def main():
-    data = get_data()
+    data = []
+    asyncio.run(worker(data))
     with open(os.path.join('debug', 'compliments.log'), 'w', encoding='utf-8') as fout:
         for item in data:
             fout.write(f'{item}\n***\n')
